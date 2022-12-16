@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -31,7 +32,7 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.AUTO)
     int id;
     String title;
-    
+    @Column(length = 100000)
     String content;
     String imagename;
     Date date;
@@ -41,4 +42,5 @@ public class Post {
     User u;
     @OneToMany(mappedBy = "p", cascade = CascadeType.ALL)
     List<Comment> li = new ArrayList<>();
+   
 }

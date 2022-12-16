@@ -25,7 +25,7 @@ public class PostDto {
     Date date;
 
     CategoryDto ct;
-
+    List<LikeDto> likess = new ArrayList<>();
     UserDto u;
 
     List<CommentDto> li = new ArrayList<>();

@@ -43,6 +43,8 @@ public class ImageServiceImpl implements ImageService {
         if (!post.exists()) {
             post.mkdir();
         }
+
+        System.out.println(post.getAbsolutePath());
         Files.copy(mf.getInputStream(),
                 Path.of(post +
                         File.separator +
@@ -54,24 +56,43 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public InputStream serveImage(String filename, String uname) throws FileNotFoundException {
         // TODO Auto-generated method stub
-        InputStream isInputStream = new FileInputStream(imagePath + File.separator + uname + File.separator +"Post"+File.separator+ filename);
+        InputStream isInputStream = new FileInputStream(
+                imagePath + File.separator + uname + File.separator + "Post" + File.separator + filename);
         return isInputStream;
     }
 
     @Override
-    public String profileImage(MultipartFile mf) throws IOException {
+    public String profileImage(MultipartFile mf, String uname) throws IOException {
         // TODO Auto-generated method stub
-        File f = new File(profilePath);
-        if (!f.exists()) {
-            f.mkdir();
+        File f1 = new File(profilePath);
+        if (!f1.exists()) {
+            f1.mkdir();
         }
 
+        String f = f1.getAbsolutePath();
+
+        File userF = new File(f1.getAbsolutePath() + File.separator + uname);
+        if (!userF.exists()) {
+            userF.mkdir();
+        }
+        File prof = new File(userF.getAbsolutePath() + File.separator + "Profile");
+        if (!prof.exists()) {
+            prof.mkdir();
+        }
         Files.copy(mf.getInputStream(),
-                Path.of(profilePath +
+                Path.of(prof +
                         File.separator +
                         mf.getOriginalFilename()),
                 StandardCopyOption.REPLACE_EXISTING);
         return mf.getOriginalFilename();
+    }
+
+    @Override
+    public InputStream serveProfileImage(String filename, String uname) throws FileNotFoundException {
+        // TODO Auto-generated method stub
+        InputStream isInputStream = new FileInputStream(
+                profilePath + File.separator + uname + File.separator + "Profile" + File.separator + filename);
+        return isInputStream;
     }
 
 //    @Override
@@ -95,11 +116,5 @@ public class ImageServiceImpl implements ImageService {
 //                StandardCopyOption.REPLACE_EXISTING);
 //        return mf.getOriginalFilename();
 //    }
-    @Override
-    public InputStream serveProfileImage(String filename) throws FileNotFoundException {
-        // TODO Auto-generated method stub
-        InputStream isInputStream = new FileInputStream(profilePath + File.separator + filename);
-        return isInputStream;
-    }
 
 }

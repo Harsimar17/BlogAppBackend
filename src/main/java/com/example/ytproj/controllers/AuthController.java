@@ -52,12 +52,8 @@ public class AuthController {
     private void authenticate(String username, String password) {
         // TODO Auto-generated method stub
         UsernamePasswordAuthenticationToken upat = new UsernamePasswordAuthenticationToken(username, password);
-        try {
-            am.authenticate(upat);
-        } catch (Exception e) {
-            // TODO: handle exception
-            System.out.println("simar here");
-        }
+         am.authenticate(upat);
+       
     }
 
     @PostMapping("/newUser")

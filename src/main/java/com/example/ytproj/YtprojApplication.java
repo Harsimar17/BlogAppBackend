@@ -17,26 +17,48 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import com.example.ytproj.entities.Role;
 import com.example.ytproj.entities.User;
 import com.example.ytproj.repositries.PostRepo;
 import com.example.ytproj.repositries.Repo;
+import com.example.ytproj.repositries.Role_repo;
 
 @SpringBootApplication
-public class YtprojApplication {
+public class YtprojApplication implements CommandLineRunner {
 
     @Autowired
     PasswordEncoder pass;
 
     @Autowired
     Repo r;
+    @Autowired
+    Role_repo roleRepo;
 
     public static void main(String[] args) {
         SpringApplication.run(YtprojApplication.class, args);
+
     }
 
     @Bean
     public ModelMapper modelmap() {
         return new ModelMapper();
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
+        // TODO Auto-generated method stub
+        Role role = new Role();
+        role.setId(501);
+        role.setName("ROLE_ADMIN");
+
+        Role role1 = new Role();
+        role1.setId(502);
+        role1.setName("ROLE_NORMAL");
+
+        List<Role> roles = List.of(role, role1);
+
+        List<Role> result = this.roleRepo.saveAll(roles);
+
     }
 
 }

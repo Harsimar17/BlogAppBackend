@@ -42,10 +42,12 @@ public class User implements UserDetails {
     String about;
     @Column(name = "imagename")
     String imagename;
+
     @OneToMany(mappedBy = "u", cascade = CascadeType.ALL)
     List<Post> li = new ArrayList<>();
     @OneToMany
     List<Comment> cmnt = new ArrayList<>();
+   
     @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role", referencedColumnName = "id"))
     Set<Role> set = new HashSet<>();

@@ -23,4 +23,5 @@ public interface PostService {
     List<PostDto> getAllPostByUser(int uid);
 
     List<PostDto> searchPost(String key);
+
 }

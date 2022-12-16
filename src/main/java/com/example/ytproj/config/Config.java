@@ -52,7 +52,7 @@ public class Config extends WebSecurityConfigurerAdapter {
                 .disable()
                 .authorizeHttpRequests()
                 .antMatchers(HttpMethod.GET).permitAll()
-                .antMatchers("/jwt/**", "/profile/image/**").permitAll()
+                .antMatchers("/jwt/**", "/profile/image/**", "/forgot/**", "/checkOTP/**", "/userPass/**").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()

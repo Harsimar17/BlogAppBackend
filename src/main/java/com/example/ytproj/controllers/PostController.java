@@ -1,5 +1,6 @@
 package com.example.ytproj.controllers;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.util.StreamUtils;
@@ -17,18 +18,26 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 import javax.servlet.http.HttpServletResponse;
 
 import com.example.ytproj.config.Constants;
+
+import com.example.ytproj.entities.Post;
 import com.example.ytproj.payload.PostDto;
 import com.example.ytproj.payload.PostResponse;
 import com.example.ytproj.repositries.Categoryrepo;
+import com.example.ytproj.repositries.PostRepo;
 import com.example.ytproj.service.PostService;
+
 import com.example.ytproj.upload.ImageService;
 
 @RestController
@@ -38,12 +47,15 @@ public class PostController {
     PostService ps;
     @Value("${project.image}")
     String path;
-
+    @Autowired
+    ModelMapper mm;
     @Autowired
     Categoryrepo cr;
 
     @Autowired
     ImageService ig;
+    @Autowired
+    PostRepo pr;
 
     @PostMapping("/user/{uid}/category/{cid}")
     public ResponseEntity<PostDto> createPost(@RequestBody PostDto pt, @PathVariable("uid") int uid,
@@ -88,7 +100,16 @@ public class PostController {
     }
 
     @DeleteMapping("/post/{pid}")
-    public void deletePostById(@PathVariable int pid) {
+    public void deletePostById(@PathVariable int pid) throws IOException {
+        PostDto post = ps.getPost(pid);
+
+        File f1 = new File(path);
+        String fpath = f1.getAbsolutePath() + File.separator + post.getU().getEmail() + File.separator + "Post"
+                + File.separator
+                + post.getImagename();
+
+        Path imgPath = Paths.get(fpath);
+        Files.delete(imgPath);
         ps.deletePost(pid);
     }
 
@@ -113,7 +134,7 @@ public class PostController {
     public void showImage(@PathVariable String imageName, HttpServletResponse hr, @PathVariable("uname") String uname)
             throws IOException {
         try {
-            InputStream is = ig.serveImage(imageName,uname);
+            InputStream is = ig.serveImage(imageName, uname);
             hr.setContentType(MediaType.IMAGE_JPEG_VALUE);
             org.hibernate.engine.jdbc.StreamUtils.copy(is, hr.getOutputStream());
         } catch (Exception e) {
@@ -121,5 +142,6 @@ public class PostController {
             System.out.println(e);
         }
     }
+
 
 }
